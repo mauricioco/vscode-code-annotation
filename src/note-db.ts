@@ -129,8 +129,8 @@ const getTODOFromSelectedText = (): string | undefined => {
                     return customMatch[2];
                 }
             }
-        } catch (e:any) {
-            vscode.window.showErrorMessage(`Error checking custom regex '${custom}': ${e.toString()}`);
+        } catch (e) {
+            vscode.window.showErrorMessage(`Error checking custom regex '${custom}': ${(<any>e).toString()}`);
             continue;
         }
     }
