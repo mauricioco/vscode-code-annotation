@@ -22,7 +22,9 @@ const getNoteTextWithFooter = (note:Note) => {
             JSON.stringify(note.id.toString())
         )}`
     )})`;
-    const markdown = new vscode.MarkdownString(`${note.text}\n\n ${edit} ${remove}`);
+    const markdown = new vscode.MarkdownString(
+        `<span style="${getConfiguration().hoverStyle}">${note.text}</span>\n\n ${edit} ${remove}`
+    );
     markdown.isTrusted = true;
     return markdown;
 }

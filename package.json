@@ -287,6 +287,11 @@
           "description": "Color for the background for the annotation on the source code in a Light theme",
           "type": "string",
           "default": "#0000000C"
+        },
+        "code-annotation.hoverStyle": {
+          "description": "CSS style for hovering text. Only color and background-color are supported (hex rgb values only).",
+          "type": "string",
+          "default": "color:white;background-color:black;"
         }
       }
     }

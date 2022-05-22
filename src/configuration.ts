@@ -36,6 +36,7 @@ export interface Configuration {
     customTODO: string[];
     enableDecoration: boolean;
     decorationColors: Color;
+    hoverStyle: string;
 }
 
 export const getConfiguration = (): Configuration => {
@@ -47,6 +48,7 @@ export const getConfiguration = (): Configuration => {
     const enableDecoration : boolean = configuration.get('annotationBG.enableDecoration') || false;
     const decorationDarkColor: string = configuration.get('annotationBG.color.dark') || '';
     const decorationLightColor: string = configuration.get('annotationBG.color.light') || '';
+    const hoverStyle: string = configuration.get('hoverStyle') || '';
     const config: Configuration = {
         showFileName: showFileName,
         showCreatedAtTimestamp: showCreatedAtTimestamp,
@@ -56,8 +58,8 @@ export const getConfiguration = (): Configuration => {
         decorationColors: {
             dark: decorationDarkColor,
             light: decorationLightColor,
-        }
+        },
+        hoverStyle: hoverStyle
     };
-
     return config;
 };
