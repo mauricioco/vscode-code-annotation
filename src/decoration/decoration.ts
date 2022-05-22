@@ -20,15 +20,18 @@ export const setDecorations = (): void => {
     const openEditors = vscode.window.visibleTextEditors;
 
     openEditors.forEach( editor => {
-        const ranges: vscode.Range[] = [];
+        const decorationOptions: vscode.DecorationOptions[] = [];
         getNotes().forEach( note => {
             if (note.fileName === editor.document.fileName) {
                 const positionStart = new vscode.Position(note.positionStart.line, note.positionStart.character);
                 const positionEnd = new vscode.Position(note.positionEnd.line, note.positionEnd.character);
-                ranges.push(new vscode.Range(positionStart, positionEnd));
+                decorationOptions.push({
+                    range: new vscode.Range(positionStart, positionEnd),
+                    hoverMessage: note.text
+                })
             }
         });
-        editor.setDecorations(decorationType(), ranges);
+        editor.setDecorations(decorationType(), decorationOptions);
     });
 };
 
