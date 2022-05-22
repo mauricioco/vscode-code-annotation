@@ -1,11 +1,16 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 
-import { addNote, addPlainNote } from './note-db';
+import { addNote, addPlainNote, updateNoteText, removeNote } from './note-db';
 import { generateMarkdownReport } from './reporting';
 import { NotesTree, TreeActions } from './notes-tree';
 import { initializeStorageLocation, getAnnotationFilePath } from './configuration';
 import { updateDecorations } from './decoration/decoration';
+
+function registerDisposableCommand(context: vscode.ExtensionContext, command:string, callback: (...args: any[]) => void) {
+    const disposable = vscode.commands.registerCommand(command, callback);
+    context.subscriptions.push(disposable);
+}
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Extension "code-annotation" is now active!');
@@ -48,19 +53,22 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    vscode.commands.registerCommand('code-annotation.addPlainNote', async () => {
+    registerDisposableCommand(context, 'code-annotation.addPlainNote', async () => {
         addPlainNote();
     });
-
-    let disposable = vscode.commands.registerCommand('code-annotation.addNote', async () => {
+    registerDisposableCommand(context, 'code-annotation.addNote', async () => {
         addNote();
+    });
+    registerDisposableCommand(context, 'code-annotation.hoverUpdateNoteText', async (id: string) => {
+        updateNoteText(id);
+    });
+    registerDisposableCommand(context, 'code-annotation.hoverRemoveNote', async (id: string) => {
+        removeNote(id);
     });
 
     vscode.workspace.onDidChangeConfiguration(() => updateDecorations(context) );
 
     updateDecorations(context);
-
-    context.subscriptions.push(disposable);
 }
 
 // this method is called when your extension is deactivated
