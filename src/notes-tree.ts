@@ -210,8 +210,8 @@ export class NotesTree implements vscode.TreeDataProvider<NoteItem> {
 	                var end = new vscode.Position(note.positionEnd.line, note.positionEnd.character);
 	                editor.selection = new vscode.Selection(start, end);
 
-	                var range = new vscode.Range(start, start);
-	                editor.revealRange(range, vscode.TextEditorRevealType.InCenter);
+	                var range2 = new vscode.Range(start, start);
+	                editor.revealRange(range2, vscode.TextEditorRevealType.InCenter);
 	            });
 	        });
 	    }
