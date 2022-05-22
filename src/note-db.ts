@@ -162,7 +162,7 @@ export const addNote = async () => {
 
 export const removeNote = async (id: string) => {
     const notes = getNotes();
-    const indexToRemove = notes.findIndex((item: { id: Number }) => {
+    const indexToRemove = notes.findIndex((item: { id: number }) => {
         return item.id.toString() === id;
     });
     if (indexToRemove >= 0) {
@@ -174,7 +174,7 @@ export const removeNote = async (id: string) => {
 
 export const updateNoteText = async (id: string) => {
     const notes = getNotes();
-    const indexToEdit = notes.findIndex((item: { id: Number }) => {
+    const indexToEdit = notes.findIndex((item: { id: number }) => {
         return item.id.toString() === id;
     });
     const note:Note = notes[indexToEdit];
@@ -185,6 +185,20 @@ export const updateNoteText = async (id: string) => {
         }
         saveNotes(notes);
     }
+    setDecorations();
+};
+
+export const updateNoteStatus = async (id: string, status: 'pending' | 'done') => {
+    const notes = getNotes();
+    const index = notes.findIndex((item: { id: number }) => {
+        return item.id.toString() === id;
+    });
+    if (index >= 0) {
+        notes[index].status = status;
+        const fromDoneToPending = notes[index].resolvedAt && status == 'done';
+        notes[index].resolvedAt =  fromDoneToPending ? undefined : new Date();
+    }
+    saveNotes(notes);
     setDecorations();
 };
 

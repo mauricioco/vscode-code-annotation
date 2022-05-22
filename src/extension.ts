@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 
-import { addNote, addPlainNote, updateNoteText, removeNote } from './note-db';
+import { addNote, addPlainNote, updateNoteText, removeNote, updateNoteStatus } from './note-db';
 import { generateMarkdownReport } from './reporting';
 import { NotesTree, TreeActions } from './notes-tree';
 import { initializeStorageLocation, getAnnotationFilePath } from './configuration';
@@ -61,6 +61,10 @@ export function activate(context: vscode.ExtensionContext) {
     });
     registerDisposableCommand(context, 'code-annotation.hoverUpdateNoteText', async (id: string) => {
         updateNoteText(id);
+    });
+    registerDisposableCommand(context, 'code-annotation.hoverUpdateNoteStatus', async (data: any) => {
+        if (!data) { return; }
+        updateNoteStatus(data.id, data.status);
     });
     registerDisposableCommand(context, 'code-annotation.hoverRemoveNote', async (id: string) => {
         removeNote(id);

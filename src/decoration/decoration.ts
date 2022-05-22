@@ -22,10 +22,30 @@ const getNoteStatusIcon = (note:Note) : string => {
     }
 }
 
+const getNoteStatusCommand = (note:Note) : string => {
+    switch(note.status) {
+        case 'pending':
+            return 'Check';
+        case 'done':
+            return 'Uncheck';
+        default:
+            return '';
+    }
+}
+
 const getNoteTextWithFooter = (note:Note) => {
+    const noteTextStyled = `<span style="${getConfiguration().hoverStyle}">${note.text}</span>`;
     const edit = `[Edit](${vscode.Uri.parse(
         `command:code-annotation.hoverUpdateNoteText?${encodeURIComponent(
             JSON.stringify(note.id.toString())
+        )}`
+    )})`;
+    const check = `[${getNoteStatusCommand(note)}](${vscode.Uri.parse(
+        `command:code-annotation.hoverUpdateNoteStatus?${encodeURIComponent(
+            JSON.stringify({
+                id: note.id.toString(),
+                status: note.status === 'done' ? 'pending' : 'done'
+            })
         )}`
     )})`;
     const remove = `[Remove](${vscode.Uri.parse(
@@ -34,7 +54,7 @@ const getNoteTextWithFooter = (note:Note) => {
         )}`
     )})`;
     const markdown = new vscode.MarkdownString(
-        `${getNoteStatusIcon(note)} <span style="${getConfiguration().hoverStyle}">${note.text}</span>\n\n ${edit} ${remove}`
+        `${getNoteStatusIcon(note)} ${noteTextStyled} \n\n${edit} ${check} ${remove}`
     );
     markdown.isTrusted = true;
     return markdown;
