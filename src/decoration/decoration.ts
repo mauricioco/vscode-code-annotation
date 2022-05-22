@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { getConfiguration } from '../configuration';
-import { getNotes } from '../note-db';
+import { getNotes, Note } from '../note-db';
 
 const decorationType: vscode.TextEditorDecorationType = vscode.window.createTextEditorDecorationType({
     dark: {
@@ -10,6 +10,22 @@ const decorationType: vscode.TextEditorDecorationType = vscode.window.createText
         backgroundColor: getConfiguration().decorationColors?.light
     }
 });
+
+const getNoteTextWithFooter = (note:Note) => {
+    const edit = `[Edit](${vscode.Uri.parse(
+        `command:code-annotation.hoverUpdateNoteText?${encodeURIComponent(
+            JSON.stringify(note.id.toString())
+        )}`
+    )})`;
+    const remove = `[Remove](${vscode.Uri.parse(
+        `command:code-annotation.hoverRemoveNote?${encodeURIComponent(
+            JSON.stringify(note.id.toString())
+        )}`
+    )})`;
+    const markdown = new vscode.MarkdownString(`${note.text}\n\n ${edit} ${remove}`);
+    markdown.isTrusted = true;
+    return markdown;
+}
 
 export const setDecorations = (): void => {
     if (!getConfiguration().enableDecoration)
@@ -25,7 +41,7 @@ export const setDecorations = (): void => {
                 const positionEnd = new vscode.Position(note.positionEnd.line, note.positionEnd.character);
                 decorationOptions.push({
                     range: new vscode.Range(positionStart, positionEnd),
-                    hoverMessage: note.text
+                    hoverMessage: getNoteTextWithFooter(note)
                 })
             }
         });
