@@ -129,7 +129,7 @@ const getTODOFromSelectedText = (): string | undefined => {
                     return customMatch[2];
                 }
             }
-        } catch (e) {
+        } catch (e:any) {
             vscode.window.showErrorMessage(`Error checking custom regex '${custom}': ${e.toString()}`);
             continue;
         }
@@ -156,6 +156,34 @@ export const addNote = async () => {
         if (annotationText) {
             addNoteToDb(createNoteFromSelection(annotationText));
         }
+    }
+    setDecorations();
+};
+
+export const removeNote = async (id: string) => {
+    const notes = getNotes();
+    const indexToRemove = notes.findIndex((item: { id: Number }) => {
+        return item.id.toString() === id;
+    });
+    if (indexToRemove >= 0) {
+        notes.splice(indexToRemove, 1);
+    }
+    saveNotes(notes);
+    setDecorations();
+};
+
+export const updateNoteText = async (id: string) => {
+    const notes = getNotes();
+    const indexToEdit = notes.findIndex((item: { id: Number }) => {
+        return item.id.toString() === id;
+    });
+    const note:Note = notes[indexToEdit];
+    if (vscode.window.activeTextEditor) {
+        let annotationText = await vscode.window.showInputBox({ placeHolder: 'Give the annotation some text...', value: note?.text });
+        if (annotationText) {
+            note.text = annotationText;
+        }
+        saveNotes(notes);
     }
     setDecorations();
 };
