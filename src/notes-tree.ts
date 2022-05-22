@@ -167,6 +167,7 @@ export class NotesTree implements vscode.TreeDataProvider<NoteItem> {
 	    }
 
 	    saveNotes(notes);
+			setDecorations();
 	}
 
 	editItem(id: string | undefined): void {

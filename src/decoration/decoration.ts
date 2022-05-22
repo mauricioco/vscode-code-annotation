@@ -11,6 +11,17 @@ const decorationType: vscode.TextEditorDecorationType = vscode.window.createText
     }
 });
 
+const getNoteStatusIcon = (note:Note) : string => {
+    switch(note.status) {
+        case 'pending':
+            return '📝';
+        case 'done':
+            return '✅';
+        default:
+            return '❌';
+    }
+}
+
 const getNoteTextWithFooter = (note:Note) => {
     const edit = `[Edit](${vscode.Uri.parse(
         `command:code-annotation.hoverUpdateNoteText?${encodeURIComponent(
@@ -23,7 +34,7 @@ const getNoteTextWithFooter = (note:Note) => {
         )}`
     )})`;
     const markdown = new vscode.MarkdownString(
-        `<span style="${getConfiguration().hoverStyle}">${note.text}</span>\n\n ${edit} ${remove}`
+        `${getNoteStatusIcon(note)} <span style="${getConfiguration().hoverStyle}">${note.text}</span>\n\n ${edit} ${remove}`
     );
     markdown.isTrusted = true;
     return markdown;
